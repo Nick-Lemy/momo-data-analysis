@@ -8,6 +8,24 @@ export const sequelize = new Sequelize({
   storage: "./database.sqlite",
 });
 
+export class Transaction extends Model {}
+Transaction.init(
+  {
+    transaction_id: DataTypes.INTEGER,
+    transaction_type: DataTypes.STRING,
+    amount: DataTypes.INTEGER,
+    sender: DataTypes.STRING,
+    message: DataTypes.STRING,
+    date: DataTypes.STRING,
+    sender: DataTypes.STRING,
+    receiver: DataTypes.STRING,
+    agent: DataTypes.STRING,
+    number: DataTypes.INTEGER,
+    code: DataTypes.INTEGER,
+  },
+  { sequelize, modelName: "transactions", tableName: "transactions" }
+);
+
 export class Bundle extends Model {}
 Bundle.init(
   {
@@ -170,35 +188,43 @@ async function sendDataToDB() {
     for (const [key, value] of Object.entries(data)) {
       if (key === "Incoming Money") {
         for (const transac of value) {
-          let add = await IncomingMoney.create(transac);
+          await Transaction.create(transac);
+          await IncomingMoney.create(transac);
         }
       } else if (key === "Payments to Code Holders") {
         for (const transac of value) {
-          let add = await PaymentsToCodeHolders.create(transac);
+          await Transaction.create(transac);
+          await PaymentsToCodeHolders.create(transac);
         }
       } else if (key === "Transfers to Mobile Numbers") {
         for (const transac of value) {
-          let add = await TransfersToMobileNumbers.create(transac);
+          await Transaction.create(transac);
+          await TransfersToMobileNumbers.create(transac);
         }
       } else if (key === "Bank Deposits") {
         for (const transac of value) {
-          let add = await BankDeposits.create(transac);
+          await Transaction.create(transac);
+          await BankDeposits.create(transac);
         }
       } else if (key === "Transactions Initiated by Third Parties") {
         for (const transac of value) {
-          let add = await TransactionByThirdParties.create(transac);
+          await Transaction.create(transac);
+          await TransactionByThirdParties.create(transac);
         }
       } else if (key === "Withdrawals from Agents") {
         for (const transac of value) {
-          let add = await WithdrawalsFromAgents.create(transac);
+          await Transaction.create(transac);
+          await WithdrawalsFromAgents.create(transac);
         }
       } else if (key === "Internet and Voice Bundle Purchases") {
         for (const transac of value) {
-          let add = await Bundle.create(transac);
+          await Transaction.create(transac);
+          await Bundle.create(transac);
         }
       } else if (key === "Bank Transfers") {
         for (const transac of value) {
-          let add = await BankTransfers.create(transac);
+          await Transaction.create(transac);
+          await BankTransfers.create(transac);
         }
       }
     }

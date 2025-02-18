@@ -104,7 +104,6 @@ export function extractAttributes(xmlString) {
             console.log("Array has been written to the file.");
           }
         );
-
         resolve(categorizedData);
       }
     });
