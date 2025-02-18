@@ -5,13 +5,14 @@ export function extractBankTransferts(message) {
      */
 
   const msg = message.split(" ");
-  const amount = msg[3];
+  const amount = Number(msg[3]);
   const receiver = msg[6] + " " + msg[7];
-  const number = msg[8].replace("(", "").replace(")", "");
-  const date = msg[17] + " " + msg[18];
-  const transactionId = msg.reverse()[0].replace(".", "");
+  const number = Number(msg[8].replace("(", "").replace(")", ""));
+  let date = msg[17] + " " + msg[18];
+  date = date.replace(".", "");
+  const transaction_id = Number(msg.reverse()[0].replace(".", ""));
   return {
-    transactionId,
+    transaction_id,
     receiver,
     number,
     amount,

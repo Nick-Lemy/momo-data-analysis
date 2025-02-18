@@ -5,7 +5,7 @@ export function extractBundles(message) {
      */
 
   const msg = message.split(" ");
-  const amount = msg.reverse()[1].replace(",", "");
+  const amount = Number(msg.reverse()[1].replace(",", ""));
   return {
     amount,
     message,

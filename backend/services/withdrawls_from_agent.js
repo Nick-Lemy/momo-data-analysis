@@ -9,10 +9,10 @@ export function extractForWithdrwalsFromAgent(message) {
     msg[10].replace("(", "").replace(")", "").replace(",", "")
   );
   const amount = Number(msg[12]);
-  const date = msg[21] + " " + msg[22];
-  const transactionId = msg.reverse()[0].replace(".", "");
+  let date = msg[21] + " " + msg[22];
+  const transaction_id = msg.reverse()[0].replace(".", "");
   return {
-    transactionId,
+    transaction_id,
     agent,
     number,
     amount,
