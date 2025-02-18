@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern Dark Dashboard</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    :root {
+      --bg-primary: #111827;
+      --bg-secondary: #1f2937;
+      --purple-primary: #8b5cf6;
+      --purple-dark: #6d28d9;
+      --text-primary: #ffffff;
+      --text-secondary: #9ca3af;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    .layout {
+      display: flex;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+      width: 260px;
+      background-color: var(--bg-secondary);
+      padding: 24px;
+      height: 100vh;
+      position: fixed;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background-color: var(--purple-primary);
+      border-radius: 8px;
+    }
+
+    .logo-text {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .nav-items {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .nav-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-item.active {
+      background-color: var(--purple-primary);
+    }
+
+    .mode-toggle {
+      position: absolute;
+      bottom: 24px;
+      left: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mode-icons {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 8px;
+      border-radius: 8px;
+      display: flex;
+      gap: 8px;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 260px;
+      padding: 24px;
+      flex: 1;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 16px;
+    }
+
+    .search-input,
+    .date-picker {
+      background-color: var(--bg-secondary);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      color: var(--text-primary);
+    }
+
+    /* Stats Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background-color: var(--bg-secondary);
+      padding: 24px;
+      border-radius: 16px;
+    }
+
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .stat-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .stat-amount {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .stat-change {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .stat-circle {
+      width: 64px;
+      height: 64px;
+      border: 4px solid var(--purple-primary);
+      border-radius: 50%;
+    }
+
+    /* Chart Section */
+    .chart-section {
+      background-color: var(--bg-secondary);
+      padding: 24px;
+      border-radius: 16px;
+      margin-bottom: 32px;
+    }
+
+    .current-balance {
+      margin-bottom: 16px;
+    }
+
+    .balance-amount {
+      font-size: 32px;
+      font-weight: bold;
+    }
+
+    .chart-container {
+      height: 300px;
+    }
+
+    /* Transactions */
+    .transactions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .transaction-button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--bg-secondary);
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      color: var(--text-primary);
+      cursor: pointer;
+    }
+
+    .transaction-button:hover {
+      background-color: var(--purple-primary);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-icon"></div>
+        <span class="logo-text">Prospera</span>
+      </div>
+
+      <nav class="nav-items">
+        <div class="nav-item active">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+          </svg>
+          <span>Home</span>
+        </div>
+        <!-- Add other nav items here -->
+      </nav>
+
+      <div class="mode-toggle">
+        <div class="mode-icons">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+        </div>
+        <span>Mode</span>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="header">
+        <h1>Dashboard</h1>
+        <div class="search-bar">
+          <input type="text" class="search-input" placeholder="Search...">
+          <div class="date-picker">Sep 23, 2023-23 Oct 2023</div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-header">
+            <div>
+              <div class="stat-title">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+                <span>Received</span>
+              </div>
+              <div class="stat-amount">$123,943.00</div>
+            </div>
+            <div class="stat-circle"></div>
+          </div>
+          <div class="stat-change">10% Decrease</div>
+        </div>
+        <!-- Add other stat cards -->
+      </div>
+
+      <div class="chart-section">
+        <div class="current-balance">
+          <h2>Current Balance</h2>
+          <div class="balance-amount">$123,943.00</div>
+        </div>
+        <div class="chart-container">
+          <canvas id="balanceChart"></canvas>
+        </div>
+      </div>
+
+      <div class="transactions">
+        <h2>Transactions</h2>
+        <button class="transaction-button">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
+          Received
+        </button>
+        <!-- Add other transaction buttons -->
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Initialize Chart
+    const ctx = document.getElementById('balanceChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+        datasets: [{
+          label: 'Received',
+          data: [4000, 3000, 2000, 2780, 1890, 2390, 3490, 4000, 3000],
+          borderColor: '#8b5cf6',
+          tension: 0.4,
+          fill: true,
+          backgroundColor: 'rgba(139, 92, 246, 0.1)'
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          y: {
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            },
+            ticks: {
+              color: '#ffffff'
+            }
+          },
+          x: {
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            },
+            ticks: {
+              color: '#ffffff'
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

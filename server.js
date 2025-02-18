@@ -1,105 +1,99 @@
+import express from "express";
+import { extractAttributes, extractTransactionDetails } from "./service.js";
+import bodyParser from "body-parser";
+import { Sequelize, Model, DataTypes } from "sequelize";
 import { readFileSync } from "node:fs";
-import { Parser } from "xml2js";
 
+// Server variables
+const app = express();
+const PORT = 3030;
+
+// xml file parsed and transformed into string
 const xmlFile = readFileSync(`${process.cwd()}/modified_sms_v2.xml`, "utf8");
 
-export default function extractAttributes(xmlString) {
-  const parser = new Parser({
-    explicitArray: false,
-    attrkey: "attributes",
-  });
+// Sequelize instance
+const sequelize = new Sequelize({
+  dialect: "sqlite",
+  storage: "./database.sqlite",
+});
+// Modeling a schema for Transactions
+class Transaction extends Model {}
+Transaction.init(
+  {
+    transaction_type: DataTypes.STRING,
+    amount: DataTypes.INTEGER,
+    body: DataTypes.STRING,
+    transaction_id: DataTypes.INTEGER,
+    timestamp: DataTypes.STRING,
+  },
+  { sequelize, modelName: "transactions" }
+);
 
-  return new Promise((resolve, reject) => {
-    parser.parseString(xmlString, (err, result) => {
-      if (err) {
-        reject(err);
-      } else {
-        let smsElements = result.smses.sms;
-        if (!Array.isArray(smsElements)) {
-          smsElements = [smsElements];
-        }
-
-        const categorizedData = {
-          "Incoming Money": [],
-          "Payments to Code Holders": [],
-          "Transfers to Mobile Numbers": [],
-          "Bank Deposits": [],
-          "Airtime Bill Payments": [],
-          "Cash Power Bill Payments": [],
-          "Transactions Initiated by Third Parties": [],
-          "Withdrawals from Agents": [],
-          "Bank Transfers": [],
-          "Internet and Voice Bundle Purchases": [],
-        };
-
-        smsElements.forEach((sms) => {
-          const body = sms.attributes.body;
-
-          if (/received .* RWF from/i.test(body)) {
-            categorizedData["Incoming Money"].push(sms.attributes);
-          } else if (
-            /Your payment of .* RWF to .* has been completed/i.test(body)
-          ) {
-            categorizedData["Payments to Code Holders"].push(sms.attributes);
-          } else if (/transferred to .* from/i.test(body)) {
-            categorizedData["Transfers to Mobile Numbers"].push(sms.attributes);
-          } else if (
-            /A bank deposit of .* has been added to your mobile money account/i.test(
-              body
-            )
-          ) {
-            categorizedData["Bank Deposits"].push(sms.attributes);
-          } else if (/Your payment of .* RWF to Airtime/i.test(body)) {
-            categorizedData["Airtime Bill Payments"].push(sms.attributes);
-          } else if (/Your payment of .* RWF to MTN Cash Power/i.test(body)) {
-            categorizedData["Cash Power Bill Payments"].push(sms.attributes);
-          } else if (
-            /A transaction of .* by .* on your MOMO account/i.test(body)
-          ) {
-            categorizedData["Transactions Initiated by Third Parties"].push(
-              sms.attributes
-            );
-          } else if (
-            /withdrawn .* RWF from your mobile money account/i.test(body)
-          ) {
-            categorizedData["Withdrawals from Agents"].push(sms.attributes);
-          } else if (/bank transfer/i.test(body)) {
-            categorizedData["Bank Transfers"].push(sms.attributes);
-          } else if (/Kugura ama inite cg interineti/i.test(body)) {
-            categorizedData["Internet and Voice Bundle Purchases"].push(
-              sms.attributes
-            );
-          }
-        });
-
-        resolve(categorizedData);
-      }
-    });
-  });
-}
+sequelize.sync();
 
 async function main() {
-  let d = await extractAttributes(xmlFile).then((data) => {
-    data = JSON.stringify(data);
-    data = JSON.parse(data);
+  await extractAttributes(xmlFile).then(async (data) => {
+    const obj = [];
+    for (const [cat, value] of Object.entries(data)) {
+      for (const message of value) {
+        let a = await Transaction.create(
+          extractTransactionDetails(message, cat)
+        );
+        console.log(a);
+      }
+    }
   });
 }
+// // Schema for Incoming Money
+// class IncomingMoney extends Model {}
+// IncomingMoney.init(
+//   {
+//     transaction_id: forei,
+//   },
+//   { sequelize, modelName: "incoming_money" }
+// );
 
-main();
-console.log("test");
+// build-ins middlewares
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-// extractAttributes(xmlFile)
-//   .then((res) => {
-//     // data = JSON.stringify(res);
-//     return res;
-//   })
-//   .catch(console.error);
+// Add a Transaction in the Database
+app.post("/trans", async (req, res) => {
+  const trans = await Transaction.create(req.body);
+  console.log(trans);
+  res.json(trans);
+});
 
-// class Transaction {
-//   constructor(type, source, value, envolved) {
-//     this.type = type;
-//     this.source = source;
-//     this.value = value;
-//     this.envolved = envolved;
-//   }
-// }
+// See all transactions
+app.get("/trans", async (req, res) => {
+  try {
+    const n = await main();
+    const transacs = await Transaction.findAll();
+    res.json(transacs);
+  } catch (e) {
+    console.error(e);
+  }
+});
+
+// routes
+app.post("/data", async (req, res) => {
+  await extractAttributes(xmlFile).then((data) => {
+    const obj = [];
+    for (const [cat, value] of Object.entries(data)) {
+      for (const message of value) {
+        obj.push(extractTransactionDetails(message, cat));
+      }
+    }
+    res.send(obj.sort((a, b) => Number(b["amount"]) - Number(a["amount"])));
+  });
+});
+
+app.get("/", async (req, res) => {
+  await extractAttributes(xmlFile).then((data) => {
+    res.send(data);
+  });
+});
+
+// listener
+app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
