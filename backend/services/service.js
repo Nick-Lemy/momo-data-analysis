@@ -1,13 +1,15 @@
 import { Parser } from "xml2js";
 import fs from "fs";
-import { extractForIncmingMoney } from "./services/incoming_money.js";
-import { extractCodeHolders } from "./services/cocde_holders.js";
-import { extractForTranferToNumber } from "./services/transfer_to_momo_number.js";
-import { extractBankDeposit } from "./services/bank_deposit.js";
-import { extractForWithdrwalsFromAgent } from "./services/withdrawls_from_agent.js";
-import { extractBankTransferts } from "./services/bank_transferts.js";
-import { extractBundles } from "./services/internet_bundle.js";
-import { extractThirdParties } from "./services/third_parties.js";
+import {
+  extractForIncomingMoney,
+  extractCodeHolders,
+  extractForTranferToNumber,
+  extractBankDeposit,
+  extractForWithdrwalsFromAgent,
+  extractBankTransferts,
+  extractBundles,
+  extractThirdParties,
+} from "./categorization.js";
 
 export function extractAttributes(xmlString) {
   const parser = new Parser({
@@ -44,7 +46,7 @@ export function extractAttributes(xmlString) {
 
           if (/received .* RWF from/i.test(body)) {
             categorizedData["Incoming Money"].push(
-              extractForIncmingMoney(body)
+              extractForIncomingMoney(body)
             );
           } else if (
             /Your payment of .* RWF to .* has been completed/i.test(body)

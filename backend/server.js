@@ -1,5 +1,5 @@
 import express from "express";
-import { extractAttributes } from "./service.js";
+import { extractAttributes } from "./services/service.js";
 import bodyParser from "body-parser";
 import { readFileSync } from "node:fs";
 
@@ -9,8 +9,6 @@ const PORT = 3030;
 
 // xml file parsed and transformed into string
 const xmlFile = readFileSync(`${process.cwd()}/modified_sms_v2.xml`, "utf8");
-
-sequelize.sync();
 
 // build-ins middlewares
 app.use(express.json());
@@ -48,11 +46,7 @@ app.post("/data", async (req, res) => {
   });
 });
 
-app.get("/", async (req, res) => {
-  await extractAttributes(xmlFile).then((data) => {
-    res.send(data);
-  });
-});
+app.get("/", async (req, res) => {});
 
 // listener
 app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
