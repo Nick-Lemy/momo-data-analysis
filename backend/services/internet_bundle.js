@@ -7,6 +7,7 @@ export function extractBundles(message) {
   const msg = message.split(" ");
   const amount = Number(msg.reverse()[1].replace(",", ""));
   return {
+    transaction_type: "Internet and Voice Bundle Purchases",
     amount,
     message,
   };

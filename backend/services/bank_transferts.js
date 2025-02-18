@@ -13,6 +13,7 @@ export function extractBankTransferts(message) {
   const transaction_id = Number(msg.reverse()[0].replace(".", ""));
   return {
     transaction_id,
+    transaction_type: "Bank Transfers",
     receiver,
     number,
     amount,

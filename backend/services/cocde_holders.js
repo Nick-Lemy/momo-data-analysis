@@ -11,6 +11,7 @@ export function extractCodeHolders(message) {
   const code = Number(words[10]);
   return {
     transaction_id,
+    transaction_type: "Payments to Code Holders",
     amount,
     receiver,
     message,

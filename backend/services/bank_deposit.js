@@ -9,6 +9,7 @@ export function extractBankDeposit(message) {
   let date = msg[15] + " " + msg[16];
   date = date.replace(".", "");
   return {
+    transaction_type: "Bank Deposits",
     amout,
     message,
     date,

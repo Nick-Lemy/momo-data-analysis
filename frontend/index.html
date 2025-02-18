@@ -1,114 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MoMo</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoMo</title>
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <div class="dashboard">
-        <aside class="sidebar">
-            <div class="logo">
-                <span class="logo-icon">M</span>
-                MoMo
-            </div>
-            <nav>
-                <div class="menu-item active">
-                    <span>🏠</span>
-                    Home
-                </div>
-                
-            </nav>
-        </aside>
-        <main class="main-content">
-            <header class="header">
-                <h1>Dashboard</h1>
-            </header>
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-title">
-                        <span>↓</span>
-                        Received
-                    </div>
-                    <div class="metric-value">200,500.00 RWF</div>
-                    <span class="trend-indicator trend-down">10% Decrease</span>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-title">
-                        <span></span>
-                        Withdraw
-                    </div>
-                    <div class="metric-value">30,500.00 RWF</div>
-                    <span class="trend-indicator trend-up">10% Increase</span>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-title">
-                        <span>↑</span>
-                        Sent
-                    </div>
-                    <div class="metric-value">40,500.00 RWF</div>
-                    <span class="trend-indicator trend-up">10% Increase</span>
-                </div>
-            </div>
-            </div>
-        </main>
-        <div class="search-section">
-            <div class="search-wrapper">
-                <div class="search-container">
-                    <input type="text" class="search-input" placeholder="Search transactions...">
-                    <button class="search-button">
-                        🔍
-                    </button>
-                </div>
-
-                <div class="date-display">
-                    <span>📅 Feb 16, 2025-16 Mar 2025</span>
-                </div>
-
-                <div class="dropdown-container">
-                    <button class="dropdown-button">
-                        Filter Options ▼
-                    </button>
-                    <div class="dropdown-content">
-                        <a href="#">All Transactions</a>
-                        <a href="#">Recent First</a>
-                        <a href="#">Highest Amount</a>
-                        <a href="#">Lowest Amount</a>
-                    </div>
-                </div>
-            </div>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <div class="logo">
+        <span class="logo-icon">M</span>
+        MoMo
+      </div>
+      <nav>
+        <div class="menu-item active">
+          <span>🏠</span>
+          Home
         </div>
 
-        <!-- Transactions section -->
-        <div class="transactions-section">
-            <div class="transaction-filters">
-                <button class="filter-button active" data-type="received">
-                    ↓ Received
-                </button>
-                <button class="filter-button" data-type="shopping">
-                    withdraw
-                </button>
-                <button class="filter-button" data-type="sent">
-                    ↑ Sent
-                </button>
-            </div>
+      </nav>
+    </aside>
+    <main class="main-content">
+      <header class="header">
+        <h1>Dashboard</h1>
+      </header>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-title">
+            <span>↓</span>
+            Received
+          </div>
+          <div class="metric-value">200,500.00 RWF</div>
+          <span class="trend-indicator trend-down">10% Decrease</span>
         </div>
+        <div class="metric-card">
+          <div class="metric-title">
+            <span></span>
+            Withdraw
+          </div>
+          <div class="metric-value">30,500.00 RWF</div>
+          <span class="trend-indicator trend-up">10% Increase</span>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">
+            <span>↑</span>
+            Sent
+          </div>
+          <div class="metric-value">40,500.00 RWF</div>
+          <span class="trend-indicator trend-up">10% Increase</span>
+        </div>
+      </div>
+      <div class="search-section">
+        <div class="search-wrapper">
+          <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search transactions...">
+            <button class="search-button">
+              🔍
+            </button>
+          </div>
 
-        <!-- Footer -->
-        <footer class="dashboard-footer">
-            <div class="footer-content">
-                <div class="footer-left">
-                    <span>Mode</span>
-                    <button class="theme-toggle">🌞</button>
-                </div>
-                <div class="footer-right">
-                    <span>© 2025 MoMo.   All rights reserved.</span>
-                </div>
+          <div class="date-display">
+            <span>📅 Feb 16, 2025-16 Mar 2025</span>
+          </div>
+
+          <div class="dropdown-container">
+            <button class="dropdown-button">
+              Filter Options ▼
+            </button>
+            <div class="dropdown-content">
+              <a href="#">All Transactions</a>
+              <a href="#">Recent First</a>
+              <a href="#">Highest Amount</a>
+              <a href="#">Lowest Amount</a>
             </div>
-        </footer>
-    </div>
-    </div>
-    <script src="script.js"></script>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transactions section -->
+      <div class="transactions-section">
+        <div class="transaction-filters">
+          <button class="filter-button active" data-type="received">
+            ↓ Received
+          </button>
+          <button class="filter-button" data-type="shopping">
+            withdraw
+          </button>
+          <button class="filter-button" data-type="sent">
+            ↑ Sent
+          </button>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="dashboard-footer">
+        <div class="footer-content">
+          <div class="footer-left">
+            <span>Mode</span>
+            <button class="theme-toggle">🌞</button>
+          </div>
+          <div class="footer-right">
+            <span>© 2025 MoMo. All rights reserved.</span>
+          </div>
+        </div>
+      </footer>
+  </div>
+  </div>
+  </div>
+  </main>
+
+  <script src="script.js"></script>
 </body>
+
 </html>

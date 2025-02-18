@@ -10,11 +10,13 @@ export function extractForWithdrwalsFromAgent(message) {
   );
   const amount = Number(msg[12]);
   let date = msg[21] + " " + msg[22];
-  const transaction_id = msg.reverse()[0].replace(".", "");
+  const transaction_id = Number(msg.reverse()[0].replace(".", ""));
   return {
     transaction_id,
+    transaction_type: "Withdrawals from Agents",
     agent,
     number,
+    message,
     amount,
     date,
   };

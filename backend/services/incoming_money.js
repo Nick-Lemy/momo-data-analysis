@@ -10,6 +10,7 @@ export function extractForIncmingMoney(message) {
   date = date.replace(".", "");
   return {
     transaction_id,
+    transaction_type: "Incoming Money",
     amount,
     sender,
     message,

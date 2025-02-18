@@ -4,11 +4,12 @@ export function extractForTranferToNumber(message) {
     New balance: 28300 RWF. Kugura ama inite cg interineti kuri MoMo, Kanda *182*2*1# .*EN#
    */
   const msg = message.split(" ");
-  const amount = msg[0].split("*")[3];
+  const amount = Number(msg[0].split("*")[3]);
   const receiver = msg[4] + " " + msg[5];
-  const number = msg[6].replace("(", "").replace(")", "");
+  const number = Number(msg[6].replace("(", "").replace(")", ""));
   let date = msg[10] + " " + msg[11];
   return {
+    transaction_type: "Transfers to Mobile Numbers",
     amount,
     receiver,
     number,
