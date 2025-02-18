@@ -2,6 +2,11 @@ import { Parser } from "xml2js";
 import fs from "fs";
 import { extractForIncmingMoney } from "./services/incoming_money.js";
 import { extractCodeHolders } from "./services/cocde_holders.js";
+import { extractForTranferToNumber } from "./services/transfer_to_momo_number.js";
+import { extractBankDeposit } from "./services/bank_deposit.js";
+import { extractForWithdrwalsFromAgent } from "./services/withdrawls_from_agent.js";
+import { extractBankTransferts } from "./services/bank_transferts.js";
+import { extractBundles } from "./services/internet_bundle.js";
 
 export function extractAttributes(xmlString) {
   const parser = new Parser({
@@ -47,13 +52,15 @@ export function extractAttributes(xmlString) {
               extractCodeHolders(body)
             );
           } else if (/transferred to .* from/i.test(body)) {
-            categorizedData["Transfers to Mobile Numbers"].push(body);
+            categorizedData["Transfers to Mobile Numbers"].push(
+              extractForTranferToNumber(body)
+            );
           } else if (
             /A bank deposit of .* has been added to your mobile money account/i.test(
               body
             )
           ) {
-            categorizedData["Bank Deposits"].push(body);
+            categorizedData["Bank Deposits"].push(extractBankDeposit(body));
           } else if (body.includes("Airtime")) {
             categorizedData["Airtime Bill Payments"].push(body);
           } else if (/Your payment of .* RWF to MTN Cash Power/i.test(body)) {
@@ -67,11 +74,15 @@ export function extractAttributes(xmlString) {
           } else if (
             /withdrawn .* RWF from your mobile money account/i.test(body)
           ) {
-            categorizedData["Withdrawals from Agents"].push(body);
+            categorizedData["Withdrawals from Agents"].push(
+              extractForWithdrwalsFromAgent(body)
+            );
           } else if (/You have transferred .* imbank.bank .*/i.test(body)) {
-            categorizedData["Bank Transfers"].push(body);
+            categorizedData["Bank Transfers"].push(extractBankTransferts(body));
           } else if (/Yello!Umaze kugura .*/i.test(body)) {
-            categorizedData["Internet and Voice Bundle Purchases"].push(body);
+            categorizedData["Internet and Voice Bundle Purchases"].push(
+              extractBundles(body)
+            );
           } else {
             uncategorizedtransactions.push(body);
           }
