@@ -183,13 +183,23 @@ body {
 }
 
 .date-display {
-    padding: 0.75rem 1rem;
-    background-color: #1a1d24;
-    border: 1px solid #2a2e38;
-    border-radius: 8px;
-    color: #fff;
-    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
+
+.date-picker {
+    color: white; /* Change the text color to white */
+    background-color: #454546; /* Optional: set a dark background for the date input */
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #050505;
+    border-radius: 4px;
+}
+
+
+
+
 
 .dropdown-container {
     position: relative;
