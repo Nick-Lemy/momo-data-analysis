@@ -7,7 +7,7 @@ export function extractForTranferToNumber(message) {
   const amount = msg[0].split("*")[3];
   const receiver = msg[4] + " " + msg[5];
   const number = msg[6].replace("(", "").replace(")", "");
-  const date = msg[10] + " " + msg[11];
+  let date = msg[10] + " " + msg[11];
   return {
     amount,
     receiver,

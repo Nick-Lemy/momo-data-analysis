@@ -5,8 +5,9 @@ export function extractBankDeposit(message) {
   */
 
   const msg = message.split(" ");
-  const amout = msg[4];
-  const date = msg[15] + " " + msg[16];
+  const amout = Number(msg[4]);
+  let date = msg[15] + " " + msg[16];
+  date = date.replace(".", "");
   return {
     amout,
     message,

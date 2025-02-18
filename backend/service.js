@@ -7,6 +7,7 @@ import { extractBankDeposit } from "./services/bank_deposit.js";
 import { extractForWithdrwalsFromAgent } from "./services/withdrawls_from_agent.js";
 import { extractBankTransferts } from "./services/bank_transferts.js";
 import { extractBundles } from "./services/internet_bundle.js";
+import { extractThirdParties } from "./services/third_parties.js";
 
 export function extractAttributes(xmlString) {
   const parser = new Parser({
@@ -69,7 +70,7 @@ export function extractAttributes(xmlString) {
             /A transaction of .* by .* on your MOMO account/i.test(body)
           ) {
             categorizedData["Transactions Initiated by Third Parties"].push(
-              body
+              extractThirdParties(body)
             );
           } else if (
             /withdrawn .* RWF from your mobile money account/i.test(body)
