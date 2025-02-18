@@ -1,126 +1,153 @@
-// DOM Elements
+// Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Menu elements
-    const menuItems = document.querySelectorAll('.menu-item');
-    const themeToggle = document.querySelector('.theme-toggle');
-    
-    // Search elements
-    const searchInput = document.querySelector('.search-input');
-    const searchButton = document.querySelector('.search-button');
-    
-    // Dropdown elements
-    const dropdownButton = document.querySelector('.dropdown-button');
-    const dropdownContent = document.querySelector('.dropdown-content');
-    
-    // Filter elements
-    const filterButtons = document.querySelectorAll('.filter-button');
-    
-    // Chart data
-    const monthlyData = {
-        received: [65000, 59000, 80000, 81000, 76000, 82000, 90000, 95000, 123943],
-        spent: [45000, 47000, 55000, 58000, 56000, 60000, 65000, 70000, 85000],
-        months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+    // DOM Elements
+    const elements = {
+        menuItems: document.querySelectorAll('.menu-item'),
+        searchInput: document.querySelector('.search-input'),
+        searchButton: document.querySelector('.search-button'),
+        dropdownButton: document.querySelector('.dropdown-button'),
+        dropdownContent: document.querySelector('.dropdown-content'),
+        filterButtons: document.querySelectorAll('.filter-button'),
+        themeToggle: document.querySelector('.theme-toggle')
     };
 
-    // Metrics data
-    const metricsData = {
-        received: 123943.00,
-        shopping: 28933.00,
-        sent: 35945.00
+    // State management
+    const state = {
+        currentFilter: 'all',
+        isDarkMode: true,
+        isDropdownOpen: false
     };
 
-    // Initialize the dashboard
+    // Initialize dashboard
     initializeDashboard();
 
-    // Menu Item Click Handlers
-    menuItems.forEach(item => {
-        item.addEventListener('click', () => {
-            menuItems.forEach(menuItem => menuItem.classList.remove('active'));
-            item.classList.add('active');
-            handleMenuChange(item.getAttribute('data-section'));
+    // Event Listeners
+    function setupEventListeners() {
+        // Menu navigation
+        elements.menuItems.forEach(item => {
+            item.addEventListener('click', () => {
+                updateActiveMenuItem(item);
+                navigateToSection(item.dataset.section);
+            });
         });
-    });
 
-    // Search Functionality
-    searchInput.addEventListener('input', debounce((e) => {
-        handleSearch(e.target.value);
-    }, 300));
+        // Search functionality
+        elements.searchInput.addEventListener('input', debounce((e) => {
+            handleSearch(e.target.value);
+        }, 300));
 
-    searchButton.addEventListener('click', () => {
-        handleSearch(searchInput.value);
-    });
-
-    // Dropdown Toggle
-    dropdownButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleDropdown();
-    });
-
-    // Close dropdown when clicking outside
-    document.addEventListener('click', () => {
-        closeDropdown();
-    });
-
-    // Prevent dropdown close when clicking inside
-    dropdownContent.addEventListener('click', (e) => {
-        e.stopPropagation();
-    });
-
-    // Filter Buttons
-    filterButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            setActiveFilter(button);
-            handleFilterChange(button.getAttribute('data-type'));
+        elements.searchButton.addEventListener('click', () => {
+            handleSearch(elements.searchInput.value);
         });
-    });
 
-    // Theme Toggle
-    themeToggle.addEventListener('click', toggleTheme);
+        // Dropdown toggle
+        elements.dropdownButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleDropdown();
+        });
 
-    // Utility Functions
+        // Close dropdown when clicking outside
+        document.addEventListener('click', () => {
+            if (state.isDropdownOpen) {
+                closeDropdown();
+            }
+        });
+
+        // Filter buttons
+        elements.filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                updateActiveFilter(button);
+                handleFilterChange(button.dataset.type);
+            });
+        });
+
+        // Theme toggle
+        elements.themeToggle.addEventListener('click', toggleTheme);
+    }
+
+    // Initialization
     function initializeDashboard() {
-        updateMetrics();
-        updateChartData();
+        setupEventListeners();
+        loadInitialData();
         setInitialTheme();
     }
 
+    // Data Loading
+    function loadInitialData() {
+        updateMetrics();
+        loadTransactions();
+    }
+
+    // Menu Functions
+    function updateActiveMenuItem(clickedItem) {
+        elements.menuItems.forEach(item => item.classList.remove('active'));
+        clickedItem.classList.add('active');
+    }
+
+    function navigateToSection(section) {
+        console.log(`Navigating to ${section} section`);
+        // Implement section navigation logic
+    }
+
+    // Search Functions
     function handleSearch(searchTerm) {
         searchTerm = searchTerm.toLowerCase().trim();
         if (searchTerm.length < 2) return;
-
-        // Implement search logic here
-        console.log(`Searching for: ${searchTerm}`);
-        // Example: filterTransactionsBySearch(searchTerm);
+        
+        // Filter transactions based on search term
+        const filteredTransactions = filterTransactionsBySearch(searchTerm);
+        updateTransactionDisplay(filteredTransactions);
     }
 
+    // Dropdown Functions
     function toggleDropdown() {
-        dropdownContent.classList.toggle('show');
+        state.isDropdownOpen = !state.isDropdownOpen;
+        elements.dropdownContent.classList.toggle('show');
     }
 
     function closeDropdown() {
-        dropdownContent.classList.remove('show');
+        state.isDropdownOpen = false;
+        elements.dropdownContent.classList.remove('show');
     }
 
-    function setActiveFilter(button) {
-        filterButtons.forEach(btn => btn.classList.remove('active'));
+    // Filter Functions
+    function updateActiveFilter(button) {
+        elements.filterButtons.forEach(btn => btn.classList.remove('active'));
         button.classList.add('active');
+        state.currentFilter = button.dataset.type;
     }
 
     function handleFilterChange(filterType) {
-        // Implement filter logic here
-        console.log(`Filter changed to: ${filterType}`);
-        // Example: filterTransactionsByType(filterType);
+        const filteredTransactions = filterTransactionsByType(filterType);
+        updateTransactionDisplay(filteredTransactions);
     }
 
-    function handleMenuChange(section) {
-        // Implement menu change logic here
-        console.log(`Menu changed to: ${section}`);
-        // Example: loadSectionContent(section);
+    // Theme Functions
+    function toggleTheme() {
+        state.isDarkMode = !state.isDarkMode;
+        document.body.classList.toggle('light-mode');
+        elements.themeToggle.textContent = state.isDarkMode ? '🌞' : '🌙';
+        localStorage.setItem('theme', state.isDarkMode ? 'dark' : 'light');
     }
 
+    function setInitialTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        state.isDarkMode = savedTheme === 'dark';
+        if (!state.isDarkMode) {
+            document.body.classList.add('light-mode');
+            elements.themeToggle.textContent = '🌙';
+        }
+    }
+
+    // Metrics Functions
     function updateMetrics() {
-        // Update metrics display
-        Object.entries(metricsData).forEach(([key, value]) => {
+        const metrics = {
+            received: 200500.00,
+            shopping: 30500.00,
+            sent: 40500.00
+        };
+
+        Object.entries(metrics).forEach(([key, value]) => {
             const element = document.querySelector(`.metric-${key}`);
             if (element) {
                 element.textContent = formatCurrency(value);
@@ -128,31 +155,37 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function updateChartData() {
-        // Implement chart update logic here
-        // Example: updateLineChart(monthlyData);
+    // Transaction Functions
+    function loadTransactions() {
+        fetchTransactions()
+            .then(transactions => {
+                updateTransactionDisplay(transactions);
+            })
+            .catch(handleError);
     }
 
-    // Theme Functions
-    function toggleTheme() {
-        const isDarkMode = document.body.classList.toggle('light-mode');
-        themeToggle.textContent = isDarkMode ? '🌙' : '🌞';
-        localStorage.setItem('theme', isDarkMode ? 'light' : 'dark');
+    function updateTransactionDisplay(transactions) {
+        // Implement transaction display logic
+        console.log('Updating transactions:', transactions);
     }
 
-    function setInitialTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        if (savedTheme === 'light') {
-            document.body.classList.add('light-mode');
-            themeToggle.textContent = '🌙';
-        }
+    function filterTransactionsBySearch(searchTerm) {
+        return mockTransactions.filter(transaction => 
+            transaction.description.toLowerCase().includes(searchTerm) ||
+            transaction.amount.toString().includes(searchTerm)
+        );
     }
 
-    // Helper Functions
+    function filterTransactionsByType(type) {
+        if (type === 'all') return mockTransactions;
+        return mockTransactions.filter(transaction => transaction.type === type);
+    }
+
+    // Utility Functions
     function formatCurrency(amount) {
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
-            currency: 'USD'
+            currency: 'RWF'
         }).format(amount);
     }
 
@@ -220,23 +253,5 @@ document.addEventListener('DOMContentLoaded', function() {
         // Implement error notification system
     }
 
-    // API Mock Functions (replace with real API calls)
-    async function fetchTransactions() {
-        try {
-            // Simulate API call
-            return new Promise(resolve => {
-                setTimeout(() => {
-                    resolve([
-                        // Sample transaction data
-                        { id: 1, type: 'received', amount: 1000, date: '2024-02-18' },
-                        { id: 2, type: 'shopping', amount: 150, date: '2024-02-17' },
-                        // Add more sample data
-                    ]);
-                }, 500);
-            });
-        } catch (error) {
-            handleError(error);
-            return [];
-        }
-    }
+   
 });
