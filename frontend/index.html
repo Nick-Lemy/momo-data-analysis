@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MoMo</title>
   <link rel="stylesheet" href="style.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -53,6 +55,61 @@
           <span class="trend-indicator trend-up">10% Increase</span>
         </div>
       </div>
+
+      <!-- <canvas id="transactionPieChart"></canvas>
+      <script>
+        async function fetchData() {
+          try {
+            const response = await fetch("http://localhost:3000/api/transaction-counts");
+            const data = await response.json();
+            console.log("Fetched Data:", data);
+
+            const ctx = document.getElementById("transactionPieChart").getContext("2d");
+
+            new Chart(ctx, {
+              type: "pie",
+              data: {
+                labels: [
+                  "Incoming Money",
+                  "Payments to Code Holders",
+                  "Transfers to Mobile Numbers",
+                  "Bank Deposits",
+                  "Transactions by Third Parties",
+                  "Withdrawals from Agents",
+                  "Internet & Voice Bundles",
+                  "Bank Transfers"
+                ],
+                datasets: [{
+                  label: "Number of Transactions",
+                  data: Object.values(data),
+                  backgroundColor: [
+                    "rgba(255, 99, 132, 0.5)",
+                    "rgba(54, 162, 235, 0.5)",
+                    "rgba(255, 206, 86, 0.5)",
+                    "rgba(75, 192, 192, 0.5)",
+                    "rgba(153, 102, 255, 0.5)",
+                    "rgba(255, 159, 64, 0.5)",
+                    "rgba(201, 203, 207, 0.5)",
+                    "rgba(50, 205, 50, 0.5)"
+                  ]
+                }]
+              },
+              options: {
+                responsive: true,
+                plugins: {
+                  legend: {
+                    position: "top"
+                  }
+                }
+              }
+            });
+          } catch (error) {
+            console.error("Error fetching data:", error);
+          }
+        }
+
+        fetchData();
+      </script> -->
       <div class="search-section">
         <div class="search-wrapper">
           <div class="search-container">
@@ -66,7 +123,7 @@
             <input type="date" class="date-picker" />
             <span>to</span>
             <input type="date" class="date-picker" />
-        </div>
+          </div>
 
           <div class="dropdown-container">
             <button class="dropdown-button">

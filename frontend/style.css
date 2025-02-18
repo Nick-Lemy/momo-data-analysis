@@ -1,311 +1,356 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
 }
 
 body {
-    background-color: #1a1d24;
-    color: #fff;
+  background-color: #1a1d24;
+  color: #fff;
 }
 
 .dashboard {
-    display: grid;
-    grid-template-columns: 240px 1fr;
-    min-height: 100vh;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
 }
 
 .sidebar {
-    background-color: #12151c;
-    padding: 2rem 1rem;
+  background-color: #12151c;
+  padding: 2rem 1rem;
 }
 
 .logo {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 2rem;
-    font-size: 1.5rem;
-    font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .logo-icon {
-    background-color: #7c5cfc;
-    padding: 0.5rem;
-    border-radius: 8px;
+  background-color: #7c5cfc;
+  padding: 0.5rem;
+  border-radius: 8px;
 }
 
 .menu-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    margin: 0.25rem 0;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  margin: 0.25rem 0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .menu-item:hover {
-    background-color: rgba(124, 92, 252, 0.1);
+  background-color: rgba(124, 92, 252, 0.1);
 }
 
 .menu-item.active {
-    background-color: #7c5cfc;
+  background-color: #7c5cfc;
 }
 
 .main-content {
-    padding: 2rem;
+  padding: 2rem;
 }
 
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
 }
 
 .date-picker {
-    background-color: #12151c;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    border: 1px solid #2a2e38;
+  background-color: #12151c;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #2a2e38;
 }
 
 .metrics-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .metric-card {
-    background-color: #12151c;
-    padding: 1.5rem;
-    border-radius: 16px;
-    position: relative;
+  background-color: #12151c;
+  padding: 1.5rem;
+  border-radius: 16px;
+  position: relative;
 }
 
 .metric-title {
-    font-size: 0.875rem;
-    color: #9ba1ab;
-    margin-bottom: 0.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #9ba1ab;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .metric-value {
-    font-size: 1.75rem;
-    font-weight: bold;
+  font-size: 1.75rem;
+  font-weight: bold;
 }
 
 .chart-container {
-    background-color: #12151c;
-    padding: 1.5rem;
-    border-radius: 16px;
-    margin-bottom: 2rem;
+  background-color: #12151c;
+  padding: 1.5rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
 }
 
 .balance-section {
-    margin-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .balance-title {
-    font-size: 0.875rem;
-    color: #9ba1ab;
-    margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: #9ba1ab;
+  margin-bottom: 0.5rem;
 }
 
 .balance-value {
-    font-size: 2rem;
-    font-weight: bold;
+  font-size: 2rem;
+  font-weight: bold;
 }
 
 .trend-indicator {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    margin-left: 0.5rem;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  margin-left: 0.5rem;
 }
 
 .trend-down {
-    background-color: rgba(255, 82, 82, 0.1);
-    color: #ff5252;
+  background-color: rgba(255, 82, 82, 0.1);
+  color: #ff5252;
 }
 
 .trend-up {
-    background-color: rgba(76, 175, 80, 0.1);
-    color: #4caf50;
+  background-color: rgba(76, 175, 80, 0.1);
+  color: #4caf50;
 }
 
 .search-section {
-    padding: 1rem 2rem;
-    background-color: #12151c;
-    border-radius: 16px;
-    margin: 1rem 0;
+  padding: 1rem 2rem;
+  background-color: #12151c;
+  border-radius: 16px;
+  margin: 1rem 0;
 }
 
 .search-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .search-container {
-    flex: 1;
-    position: relative;
-    max-width: 400px;
+  flex: 1;
+  position: relative;
+  max-width: 400px;
 }
 
 .search-input {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    padding-right: 3rem;
-    background-color: #1a1d24;
-    border: 1px solid #2a2e38;
-    border-radius: 8px;
-    color: #fff;
-    font-size: 0.9rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  padding-right: 3rem;
+  background-color: #1a1d24;
+  border: 1px solid #2a2e38;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.9rem;
 }
 
 .search-button {
-    position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.2rem;
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
 }
 
 .date-display {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .date-picker {
-    color: white; /* Change the text color to white */
-    background-color: #454546; /* Optional: set a dark background for the date input */
-    padding: 8px;
-    font-size: 16px;
-    border: 1px solid #050505;
-    border-radius: 4px;
+  color: white; /* Change the text color to white */
+  background-color: #454546; /* Optional: set a dark background for the date input */
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #050505;
+  border-radius: 4px;
 }
 
-
-
-
-
 .dropdown-container {
-    position: relative;
+  position: relative;
 }
 
 .dropdown-button {
-    padding: 0.75rem 1rem;
-    background-color: #1a1d24;
-    border: 1px solid #2a2e38;
-    border-radius: 8px;
-    color: #fff;
-    cursor: pointer;
-    white-space: nowrap;
+  padding: 0.75rem 1rem;
+  background-color: #1a1d24;
+  border: 1px solid #2a2e38;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .dropdown-content {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 100%;
-    margin-top: 0.5rem;
-    background-color: #1a1d24;
-    border: 1px solid #2a2e38;
-    border-radius: 8px;
-    min-width: 200px;
-    z-index: 1000;
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 0.5rem;
+  background-color: #1a1d24;
+  border: 1px solid #2a2e38;
+  border-radius: 8px;
+  min-width: 200px;
+  z-index: 1000;
 }
 
 .dropdown-content.show {
-    display: block;
+  display: block;
 }
 
 .dropdown-content a {
-    color: #fff;
-    padding: 0.75rem 1rem;
-    text-decoration: none;
-    display: block;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  display: block;
 }
 
 .dropdown-content a:hover {
-    background-color: #2a2e38;
+  background-color: #2a2e38;
 }
 
 /* Transaction filters */
 .transactions-section {
-    padding: 1rem 2rem;
-    background-color: #12151c;
-    border-radius: 16px;
-    margin: 1rem 0;
+  padding: 1rem 2rem;
+  background-color: #12151c;
+  border-radius: 16px;
+  margin: 1rem 0;
 }
 
 .transaction-filters {
-    display: flex;
-    gap: 1rem;
+  display: flex;
+  gap: 1rem;
 }
 
 .filter-button {
-    padding: 0.75rem 1.5rem;
-    background-color: #1a1d24;
-    border: 1px solid #2a2e38;
-    border-radius: 8px;
-    color: #fff;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #1a1d24;
+  border: 1px solid #2a2e38;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .filter-button:hover {
-    background-color: #2a2e38;
+  background-color: #2a2e38;
 }
 
 .filter-button.active {
-    background-color: #7c5cfc;
-    border-color: #7c5cfc;
+  background-color: #7c5cfc;
+  border-color: #7c5cfc;
 }
 
 /* Footer styles */
 .dashboard-footer {
-    background-color: #12151c;
-    padding: 1rem 2rem;
-    margin-top: auto;
-    border-radius: 16px;
+  background-color: #12151c;
+  padding: 1rem 2rem;
+  margin-top: auto;
+  border-radius: 16px;
 }
 
 .footer-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .footer-left {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .theme-toggle {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.2rem;
-    padding: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0.5rem;
 }
 
 .footer-right {
-    color: #9ba1ab;
-    font-size: 0.9rem;
+  color: #9ba1ab;
+  font-size: 0.9rem;
+}
+
+/* Chart Container */
+#transactionPieChart {
+  width: 100% !important; /* Ensure it takes the full width available */
+  max-width: 450px; /* Limit the maximum width */
+  height: 300px; /* Adjust the height */
+  margin: 20px auto; /* Center the chart horizontally with some margin */
+  border-radius: 12px; /* Rounded corners */
+  background-color: #12151c; /* Keep the dark background matching the sidebar */
+}
+
+/* Optional: Add a border around the chart */
+#transactionPieChart {
+  border: 2px solid #2a2e38; /* Optional: Border to make it stand out */
+}
+
+/* Tooltip Customization */
+.chartjs-tooltip {
+  color: #fff !important; /* White text for tooltips */
+  border-radius: 4px; /* Slight rounding of the tooltip */
+  padding: 8px;
+  font-size: 0.9rem;
+}
+
+/* Legend Customization */
+.chartjs-legend {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.chartjs-legend li {
+  display: inline-block;
+  margin: 0 12px;
+  font-size: 1rem;
+}
+
+.chartjs-legend li span {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+/* Hover Effect for Legend */
+.chartjs-legend li:hover {
+  opacity: 0.7;
 }

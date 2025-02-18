@@ -1,27 +1,14 @@
 import { Sequelize, Model, DataTypes } from "sequelize";
-import { readFileSync } from "node:fs";
-import { extractAttributes } from "./service.js";
 
+import { readFileSync } from "node:fs";
+import { extractAttributes } from "./services/service.js";
 // Sequelize instance
-const sequelize = new Sequelize({
+export const sequelize = new Sequelize({
   dialect: "sqlite",
   storage: "./database.sqlite",
 });
-// Modeling a schemas
 
-// class Transaction extends Model {}
-// Transaction.init(
-//   {
-//     transaction_id: DataTypes.INTEGER,
-//     transaction_type: DataTypes.STRING,
-//     amount: DataTypes.INTEGER,
-//     body: DataTypes.STRING,
-//     date: DataTypes.STRING,
-//   },
-//   { sequelize, modelName: "transactions" }
-// );
-
-class Bundle extends Model {}
+export class Bundle extends Model {}
 Bundle.init(
   {
     transaction_id: {
@@ -42,7 +29,7 @@ Bundle.init(
   }
 );
 
-class IncomingMoney extends Model {}
+export class IncomingMoney extends Model {}
 IncomingMoney.init(
   {
     transaction_id: DataTypes.INTEGER,
@@ -57,7 +44,7 @@ IncomingMoney.init(
   { sequelize, modelName: "incoming_money", tableName: "incoming_money" }
 );
 
-class PaymentsToCodeHolders extends Model {}
+export class PaymentsToCodeHolders extends Model {}
 PaymentsToCodeHolders.init(
   {
     transaction_id: DataTypes.INTEGER,
@@ -77,7 +64,7 @@ PaymentsToCodeHolders.init(
   }
 );
 
-class TransfersToMobileNumbers extends Model {}
+export class TransfersToMobileNumbers extends Model {}
 TransfersToMobileNumbers.init(
   {
     transaction_type: DataTypes.STRING,
@@ -96,7 +83,7 @@ TransfersToMobileNumbers.init(
   }
 );
 
-class BankDeposits extends Model {}
+export class BankDeposits extends Model {}
 BankDeposits.init(
   {
     transaction_type: DataTypes.STRING,
@@ -107,7 +94,7 @@ BankDeposits.init(
   { sequelize, modelName: "bank_deposits", tableName: "bank_deposits" }
 );
 
-class TransactionByThirdParties extends Model {}
+export class TransactionByThirdParties extends Model {}
 TransactionByThirdParties.init(
   {
     transaction_id: DataTypes.INTEGER,
@@ -126,7 +113,7 @@ TransactionByThirdParties.init(
   }
 );
 
-class WithdrawalsFromAgents extends Model {}
+export class WithdrawalsFromAgents extends Model {}
 WithdrawalsFromAgents.init(
   {
     transaction_id: DataTypes.INTEGER,
@@ -146,7 +133,7 @@ WithdrawalsFromAgents.init(
   }
 );
 
-class BankTransfers extends Model {}
+export class BankTransfers extends Model {}
 BankTransfers.init(
   {
     transaction_id: DataTypes.INTEGER,
@@ -165,29 +152,20 @@ BankTransfers.init(
     tableName: "bank_transferts",
   }
 );
+await sequelize
+  .sync({ force: true }) // WARNING: This will DROP & recreate tables
+  .then(() => {
+    console.log("Database synced successfully");
+  })
+  .catch((error) => {
+    console.error("Error syncing database:", error);
+  });
 
-// sequelize
-//   .sync({ force: true }) // WARNING: This will DROP & recreate tables
-//   .then(() => {
-//     console.log("Database synced successfully");
-//   })
-//   .catch((error) => {
-//     console.error("Error syncing database:", error);
-//   });
+// xml file parsed and transformed into string
 
 // Creating
 async function sendDataToDB() {
-  // xml file parsed and transformed into string
   const xmlFile = readFileSync(`${process.cwd()}/modified_sms_v2.xml`, "utf8");
-  // await extractAttributes(xmlFile).then((data) => {
-  //   const obj = [];
-  //   for (const [cat, value] of Object.entries(data)) {
-  //     for (const message of value) {
-  //       obj.push(extractTransactionDetails(message, cat));
-  //     }
-  //   }
-  //   res.send(obj.sort((a, b) => Number(b["date"]) - Number(a["date"])));
-  // });
   await extractAttributes(xmlFile).then(async (data) => {
     for (const [key, value] of Object.entries(data)) {
       if (key === "Incoming Money") {

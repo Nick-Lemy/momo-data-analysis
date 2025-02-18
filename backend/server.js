@@ -1,52 +1,40 @@
 import express from "express";
-import { extractAttributes } from "./services/service.js";
-import bodyParser from "body-parser";
-import { readFileSync } from "node:fs";
+import {
+  IncomingMoney,
+  PaymentsToCodeHolders,
+  TransfersToMobileNumbers,
+  BankDeposits,
+  TransactionByThirdParties,
+  WithdrawalsFromAgents,
+  Bundle,
+  BankTransfers,
+} from "./db.js";
+import cors from "cors"; // Import CORS middleware
 
-// Server variables
 const app = express();
-const PORT = 3030;
+const PORT = 3000;
 
-// xml file parsed and transformed into string
-const xmlFile = readFileSync(`${process.cwd()}/modified_sms_v2.xml`, "utf8");
-
-// build-ins middlewares
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-
-// Add a Transaction in the Database
-app.post("/trans", async (req, res) => {
-  const trans = await Transaction.create(req.body);
-  console.log(trans);
-  res.json(trans);
-});
-
-// See all transactions
-app.get("/trans", async (req, res) => {
+app.use(cors()); // Enable CORS for all requests
+app.get("/api/transaction-counts", async (req, res) => {
   try {
-    const n = await main();
-    const transacs = await Transaction.findAll();
-    res.json(transacs);
-  } catch (e) {
-    console.error(e);
+    const data = {
+      incoming_money: await IncomingMoney.count(),
+      payments_to_code_holders: await PaymentsToCodeHolders.count(),
+      transfers_to_mobile_numbers: await TransfersToMobileNumbers.count(),
+      bank_deposits: await BankDeposits.count(),
+      transactions_by_third_parties: await TransactionByThirdParties.count(),
+      withdrawals_from_agents: await WithdrawalsFromAgents.count(),
+      internet_voice_bundles: await Bundle.count(),
+      bank_transfers: await BankTransfers.count(),
+    };
+
+    res.json(data);
+  } catch (error) {
+    console.error("Error fetching transaction counts:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-// routes
-app.post("/data", async (req, res) => {
-  await extractAttributes(xmlFile).then((data) => {
-    const obj = [];
-    for (const [cat, value] of Object.entries(data)) {
-      for (const message of value) {
-        obj.push(extractTransactionDetails(message, cat));
-      }
-    }
-    res.send(obj.sort((a, b) => Number(b["amount"]) - Number(a["amount"])));
-  });
-});
-
-app.get("/", async (req, res) => {});
-
-// listener
-app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
+app.listen(PORT, () =>
+  console.log(`Server running on http://localhost:${PORT}`)
+);
