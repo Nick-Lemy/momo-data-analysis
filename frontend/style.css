@@ -15,3 +15,8 @@ body {
     grid-template-columns: 240px 1fr;
     min-height: 100vh;
 }
+
+.sidebar {
+    background-color:blue-grey;
+    padding: 2rem 1rem;
+}
