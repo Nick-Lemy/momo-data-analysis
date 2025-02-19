@@ -13,6 +13,7 @@ import {
   extractForCashPowerBillPayments,
 } from "./categorization.js";
 
+// Function that extract the data
 export function extractAttributes(xmlString) {
   const parser = new Parser({
     explicitArray: false,

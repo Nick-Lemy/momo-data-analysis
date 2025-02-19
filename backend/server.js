@@ -14,6 +14,7 @@ import {
 } from "./db.js";
 import cors from "cors";
 
+// Setup Express
 const app = express();
 const PORT = 3000;
 
@@ -110,6 +111,7 @@ app.get("/payments_to_code_holders", async (req, res) => {
   } catch {}
 });
 
+// Enpoint for the sum of amounts of the Transfers To Mobile Numbers transactions
 app.get("/transferts_to_mobile_numbers", async (req, res) => {
   try {
     const transferts_to_mobile_numbers =
@@ -122,6 +124,7 @@ app.get("/transferts_to_mobile_numbers", async (req, res) => {
   } catch {}
 });
 
+// Enpoint for the sum of amounts of the Bank Deposits transactions
 app.get("/bank_deposits", async (req, res) => {
   try {
     const bank_deposits = await BankDeposits.findAll();
@@ -133,6 +136,7 @@ app.get("/bank_deposits", async (req, res) => {
   } catch {}
 });
 
+// Enpoint for the sum of amounts of the Transaction By Third Parties transactions
 app.get("/transaction_by_third_parties", async (req, res) => {
   try {
     const transaction_by_third_parties =
@@ -145,6 +149,7 @@ app.get("/transaction_by_third_parties", async (req, res) => {
   } catch {}
 });
 
+// Enpoint for the sum of amounts of the Withdrawals From Agents transactions
 app.get("/withdrawals_from_agents", async (req, res) => {
   try {
     const withdrawals_from_agents = await WithdrawalsFromAgents.findAll();
@@ -156,6 +161,7 @@ app.get("/withdrawals_from_agents", async (req, res) => {
   } catch {}
 });
 
+// Enpoint for the sum of amounts of the Bank Transfers transactions
 app.get("/bank_transferts", async (req, res) => {
   try {
     const bank_transferts = await BankTransfers.findAll();
@@ -167,6 +173,7 @@ app.get("/bank_transferts", async (req, res) => {
   } catch {}
 });
 
+// Lunch the listener
 app.listen(PORT, () =>
   console.log(`Server running on http://localhost:${PORT}`)
 );
