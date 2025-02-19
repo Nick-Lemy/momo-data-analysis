@@ -33,6 +33,12 @@ npm run server
 Run the live server on Visual Studio Code
 ```
 
+### 4 - Browser
+
+Live Server will automatically open your browser.
+
+if not: copy the link provided by the like server and paste in the your browser
+
 ## Conclusion
 
 Enjoy our app :>\) ! And buy us a coffe
