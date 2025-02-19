@@ -250,6 +250,7 @@ body {
 
 .transaction-filters {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
@@ -354,3 +355,27 @@ body {
 .chartjs-legend li:hover {
   opacity: 0.7;
 }
+
+.transactions-list {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+/* .no {
+  display: none;
+} */

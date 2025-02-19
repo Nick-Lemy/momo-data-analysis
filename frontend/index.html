@@ -18,154 +18,110 @@
         MoMo
       </div>
       <nav>
-        <div class="menu-item active">
+        <div id="home" class="menu-item active">
           <span>🏠</span>
           Home
         </div>
 
+        <div id="analysis" class="menu-item">
+          <span>📈</span>
+          Analysis
+        </div>
+        <script>
+          document.addEventListener("DOMContentLoaded", function() {
+            // Function to handle navigation
+            function navigateTo(page) {
+              window.location.href = page;
+            }
+
+            // Add event listeners to the divs
+            document.getElementById("home").addEventListener("click", function() {
+              navigateTo("index.html");
+            });
+
+            document.getElementById("analysis").addEventListener("click", function() {
+              navigateTo("analysis.html");
+            });
+          });
+        </script>
       </nav>
     </aside>
     <main class="main-content">
       <header class="header">
         <h1>Dashboard</h1>
       </header>
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <div class="metric-title">
-            <span>↓</span>
-            Received
+
+      <div class="search-section">
+        <div class="search-wrapper">
+          <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search transactions...">
+            <button class="search-button">
+              🔍
+            </button>
           </div>
-          <div class="metric-value">200,500.00 RWF</div>
-          <span class="trend-indicator trend-down">10% Decrease</span>
-        </div>
-        <div class="metric-card">
-          <div class="metric-title">
-            <span></span>
-            Withdraw
-          </div>
-          <div class="metric-value">30,500.00 RWF</div>
-          <span class="trend-indicator trend-up">10% Increase</span>
-        </div>
-        <div class="metric-card">
-          <div class="metric-title">
-            <span>↑</span>
-            Sent
-          </div>
-          <div class="metric-value">40,500.00 RWF</div>
-          <span class="trend-indicator trend-up">10% Increase</span>
-        </div>
-      </div>
 
-      <!-- <canvas id="transactionPieChart"></canvas>
-      <script>
-        async function fetchData() {
-          try {
-            const response = await fetch("http://localhost:3000/api/transaction-counts");
-            const data = await response.json();
-            console.log("Fetched Data:", data);
-
-            const ctx = document.getElementById("transactionPieChart").getContext("2d");
-
-            new Chart(ctx, {
-              type: "pie",
-              data: {
-                labels: [
-                  "Incoming Money",
-                  "Payments to Code Holders",
-                  "Transfers to Mobile Numbers",
-                  "Bank Deposits",
-                  "Transactions by Third Parties",
-                  "Withdrawals from Agents",
-                  "Internet & Voice Bundles",
-                  "Bank Transfers"
-                ],
-                datasets: [{
-                  label: "Number of Transactions",
-                  data: Object.values(data),
-                  backgroundColor: [
-                    "rgba(255, 99, 132, 0.5)",
-                    "rgba(54, 162, 235, 0.5)",
-                    "rgba(255, 206, 86, 0.5)",
-                    "rgba(75, 192, 192, 0.5)",
-                    "rgba(153, 102, 255, 0.5)",
-                    "rgba(255, 159, 64, 0.5)",
-                    "rgba(201, 203, 207, 0.5)",
-                    "rgba(50, 205, 50, 0.5)"
-                  ]
-                }]
-              },
-              options: {
-                responsive: true,
-                plugins: {
-                  legend: {
-                    position: "top"
-                  }
-                }
-              }
-            });
-          } catch (error) {
-            console.error("Error fetching data:", error);
-          }
-        }
-
-        fetchData();
-      </script>
-      <div class="search-section"> -->
-      <div class="search-wrapper">
-        <div class="search-container">
-          <input type="text" class="search-input" placeholder="Search transactions...">
-          <button class="search-button">
-            🔍
-          </button>
-        </div>
-
-        <div class="date-display">
-          <input type="date" class="date-picker" />
-          <span>to</span>
-          <input type="date" class="date-picker" />
-        </div>
-
-        <div class="dropdown-container">
-          <button class="dropdown-button">
-            Filter Options ▼
-          </button>
-          <div class="dropdown-content">
-            <a href="#">All Transactions</a>
-            <a href="#">Recent First</a>
-            <a href="#">Highest Amount</a>
-            <a href="#">Lowest Amount</a>
+          <div class="date-display">
+            <input type="date" class="date-picker" />
           </div>
         </div>
-      </div>
-  </div>
+        <div class="transactions-section">
+          <div class="transaction-filters">
+            <button class="filter-button active" data-type="transactions">
+              All transactions
+            </button>
+            <button class="filter-button" data-type="incoming_money">
+              Incoming money
+            </button>
+            <button class="filter-button" data-type="transferts_to_mobile_numbers">
+              Transfers to Mobile Numbers
+            </button>
+            <button class="filter-button" data-type="withdrawals_from_agents">
+              Withdrawals from Agents
+            </button>
+            <button class="filter-button" data-type="bank_deposits">
+              Bank Deposits
+            </button>
+            <button class="filter-button" data-type="bank_transferts">
+              Bank Transfers
+            </button>
+            <button class="filter-button" data-type="cashpower_bill_payments">
+              Cash Power Bill Payments
+            </button>
+            <button class="filter-button" data-type="payments_to_code_holders">
+              Payments to Code Holders
+            </button>
+            <button class="filter-button" data-type="bundles_purchases">
+              Internet and Voice Bundle Purchases
+            </button>
+            <button class="filter-button" data-type="airtime_bill_payments">
+              Airtime Bill Payments
+            </button>
+            <button class="filter-button" data-type="transaction_by_third_parties">
+              Transactions Initiated by Third Parties
+            </button>
+          </div>
+          <div class="transactions-list">
+            <h2>Transactions</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>id</th>
+                  <th>type</th>
+                  <th>message</th>
+                  <th>receiver</th>
+                  <th>amount</th>
+                  <th>number</th>
+                  <th>date</th>
+                </tr>
+              </thead>
+              <tbody id="transactions-body">
+                <!-- Transactions will be dynamically inserted here -->
+              </tbody>
+            </table>
+          </div>
 
-  <!-- Transactions section -->
-  <div class="transactions-section">
-    <div class="transaction-filters">
-      <button class="filter-button active" data-type="received">
-        ↓ Received
-      </button>
-      <button class="filter-button" data-type="shopping">
-        withdraw
-      </button>
-      <button class="filter-button" data-type="sent">
-        ↑ Sent
-      </button>
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <footer class="dashboard-footer">
-    <div class="footer-content">
-      <div class="footer-left">
-        <span>Mode</span>
-        <button class="theme-toggle">🌞</button>
+        </div>
       </div>
-      <div class="footer-right">
-        <span>© 2025 MoMo. All rights reserved.</span>
-      </div>
-    </div>
-  </footer>
   </div>
   </div>
   </div>
@@ -174,4 +130,4 @@
   <script src="script.js"></script>
 </body>
 
-</html>
+</html>`

@@ -14,7 +14,6 @@ Transaction.init(
     transaction_id: DataTypes.INTEGER,
     transaction_type: DataTypes.STRING,
     amount: DataTypes.INTEGER,
-    sender: DataTypes.STRING,
     message: DataTypes.STRING,
     date: DataTypes.STRING,
     sender: DataTypes.STRING,
@@ -24,6 +23,40 @@ Transaction.init(
     code: DataTypes.INTEGER,
   },
   { sequelize, modelName: "transactions", tableName: "transactions" }
+);
+
+export class AirtimeBillPayments extends Model {}
+AirtimeBillPayments.init(
+  {
+    transaction_id: DataTypes.INTEGER,
+    transaction_type: DataTypes.STRING,
+    amount: DataTypes.INTEGER,
+    message: DataTypes.STRING,
+    receiver: DataTypes.STRING,
+    date: DataTypes.STRING,
+  },
+  {
+    sequelize,
+    modelName: "airtime_bill_payments",
+    tableName: "airtime_bill_payments",
+  }
+);
+
+export class CashPowerBillPayments extends Model {}
+CashPowerBillPayments.init(
+  {
+    transaction_id: DataTypes.INTEGER,
+    transaction_type: DataTypes.STRING,
+    amount: DataTypes.INTEGER,
+    message: DataTypes.STRING,
+    receiver: DataTypes.STRING,
+    date: DataTypes.STRING,
+  },
+  {
+    sequelize,
+    modelName: "cashpower_bill_payments",
+    tableName: "cashpower_bill_payments",
+  }
 );
 
 export class Bundle extends Model {}
@@ -37,8 +70,7 @@ Bundle.init(
     transaction_type: DataTypes.STRING,
     amount: DataTypes.INTEGER,
     message: DataTypes.STRING,
-    createdAt: false,
-    updatedAt: false,
+    date: DataTypes.STRING,
   },
   {
     sequelize,
@@ -190,6 +222,16 @@ async function sendDataToDB() {
         for (const transac of value) {
           await Transaction.create(transac);
           await IncomingMoney.create(transac);
+        }
+      } else if (key === "Airtime Bill Payments") {
+        for (const transac of value) {
+          await Transaction.create(transac);
+          await AirtimeBillPayments.create(transac);
+        }
+      } else if (key === "Cash Power Bill Payments") {
+        for (const transac of value) {
+          await Transaction.create(transac);
+          await CashPowerBillPayments.create(transac);
         }
       } else if (key === "Payments to Code Holders") {
         for (const transac of value) {

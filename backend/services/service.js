@@ -9,6 +9,8 @@ import {
   extractBankTransferts,
   extractBundles,
   extractThirdParties,
+  extractForAirtimeBillPayments,
+  extractForCashPowerBillPayments,
 } from "./categorization.js";
 
 export function extractAttributes(xmlString) {
@@ -47,6 +49,14 @@ export function extractAttributes(xmlString) {
           if (/received .* RWF from/i.test(body)) {
             categorizedData["Incoming Money"].push(
               extractForIncomingMoney(body)
+            );
+          } else if (body.includes("Airtime")) {
+            categorizedData["Airtime Bill Payments"].push(
+              extractForAirtimeBillPayments(body)
+            );
+          } else if (body.includes("MTN Cash Power")) {
+            categorizedData["Cash Power Bill Payments"].push(
+              extractForCashPowerBillPayments(body)
             );
           } else if (
             /Your payment of .* RWF to .* has been completed/i.test(body)

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoMo</title>
+  <link rel="stylesheet" href="style.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <div class="logo">
+        <span class="logo-icon">M</span>
+        MoMo
+      </div>
+      <nav>
+        <div id="home" class="menu-item">
+          <span>🏠</span>
+          Home
+        </div>
+
+        <div id="analysis" class="menu-item active">
+          <span>📈</span>
+          Analysis
+        </div>
+        <script>
+          document.addEventListener("DOMContentLoaded", function() {
+            // Function to handle navigation
+            function navigateTo(page) {
+              window.location.href = page;
+            }
+
+            // Add event listeners to the divs
+            document.getElementById("home").addEventListener("click", function() {
+              navigateTo("index.html");
+            });
+
+            document.getElementById("analysis").addEventListener("click", function() {
+              navigateTo("analysis.html");
+            });
+          });
+        </script>
+      </nav>
+    </aside>
+    <main class="main-content">
+      <header class="header">
+        <h1>Dashboard</h1>
+      </header>
+      <div style="display: flex;">
+        <!-- Add this where you want the chart to appear in your HTML -->
+        <div style="width: 80%; margin: 0 auto; padding-top: 50px;">
+          <canvas id="myChart"></canvas>
+        </div>
+        <div class="chart-container" style="height: 300px;">
+          <div id="chart-header">
+            <h3 style="color: white;">Transaction Breakdown</h3>
+            <div class="loading-spinner" id="chart-loader">Loading...</div>
+          </div>
+          <canvas id="transactionChart"></canvas>
+        </div>
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+      <script>
+        // List of categories
+        const categories = [
+          "airtime_bill_payments",
+          "cashpower_bill_payments",
+          "bundles_purchases",
+          "incoming_money",
+          "payments_to_code_holders",
+          "transferts_to_mobile_numbers",
+          "transaction_by_third_parties",
+          "withdrawals_from_agents",
+          "bank_transferts",
+          "bank_deposits"
+        ];
+
+        // Function to fetch amounts for each category
+        const fetchAmounts = async (category) => {
+          const response = await fetch(`http://localhost:3000/${category}`);
+          const data = await response.json();
+          return data; // Assuming the response contains the 'amount' key
+        };
+
+        // Fetch data for all categories
+        const fetchAllAmounts = async () => {
+          const amounts = await Promise.all(categories.map(e => fetchAmounts(e)));
+          console.log(amounts)
+          return amounts;
+        };
+
+        // Create the chart after fetching data
+        fetchAllAmounts().then(amounts => {
+          const ctx = document.getElementById('myChart').getContext('2d');
+          const myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: categories,
+              datasets: [{
+                label: 'Transaction Amounts (RWF)',
+                data: amounts,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                tension: 0.1,
+                fill: false,
+              }]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    callback: function(value) {
+                      return value.toLocaleString('en-US', {
+                        style: 'currency',
+                        currency: 'RWF'
+                      });
+                    }
+                  }
+                }
+              }
+            }
+          });
+        }).catch(error => {
+            console.error("Error fetching data:", error);
+          }
+
+        );
+      </script>
+
+
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+          const chartCanvas = document.getElementById('transactionChart');
+          const summaryElement = document.getElementById('chart-summary');
+          const loaderElement = document.getElementById('chart-loader');
+
+          try {
+            const response = await fetch('http://localhost:3000/api/transaction-counts');
+            if (!response.ok) throw new Error('Failed to fetch data');
+            const data = await response.json();
+
+            // Convert to array & sort
+            let sortedData = Object.entries(data)
+              .map(([key, value]) => ({
+                label: key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+                value
+              }))
+              .sort((a, b) => b.value - a.value);
+
+            // 🎯 **Apply Log Scaling** to prevent massive value gaps
+            const minValue = Math.min(...sortedData.map(d => d.value));
+            const maxValue = Math.max(...sortedData.map(d => d.value));
+            const scaleFactor = 300 / Math.log(maxValue + 1); // Scale to fit in 300px
+            sortedData = sortedData.map(d => ({
+              ...d,
+              scaledValue: Math.max(10, Math.log(d.value + 1) * scaleFactor) // Ensure small values are visible
+            }));
+
+            // Colors (generate dynamic colors)
+            const colors = sortedData.map((_, i) => `hsl(${i * 25}, 70%, 60%)`);
+
+            new Chart(chartCanvas.getContext('2d'), {
+              type: 'doughnut',
+              data: {
+                labels: sortedData.map(item => item.label),
+                datasets: [{
+                  data: sortedData.map(item => item.scaledValue),
+                  backgroundColor: colors,
+                  borderWidth: 1
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: {
+                    position: 'right'
+                  },
+                  tooltip: {
+                    callbacks: {
+                      label: context => {
+                        const originalValue = sortedData[context.dataIndex].value;
+                        return `${context.label}: ${originalValue.toLocaleString()} Transactions`;
+                      }
+                    }
+                  }
+                }
+              }
+            });
+
+            // Summary
+            const totalTransactions = sortedData.reduce((sum, item) => sum + item.value, 0);
+            summaryElement.innerHTML = `
+          <div class="summary-grid">
+            <div class="summary-card" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8)">
+              <h4>Total</h4>
+              <p>${totalTransactions.toLocaleString()}</p>
+            </div>
+            <div class="summary-card" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9)">
+              <h4>Most Common</h4>
+              <p>${sortedData[0].label}</p>
+            </div>
+          </div>`;
+
+            loaderElement.style.display = 'none';
+          } catch (error) {
+            console.error('Error creating chart:', error);
+            loaderElement.textContent = ''
+          }
+        });
+      </script>
+
+      <style>
+        .chart-container {
+          border-radius: 10px;
+          padding: 15px;
+          margin: 10px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          max-width: 400px;
+        }
+
+        #chart-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 10px;
+        }
+
+        #chart-header h3 {
+          font-size: 1rem;
+          font-weight: bold;
+          color: #1f2937;
+        }
+
+        #transactionChart {
+          height: 300px;
+          width: 100%;
+        }
+
+        .loading-spinner {
+          color: #6b7280;
+          font-size: 0.75rem;
+        }
+
+        .summary-grid {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(100px, 1fr));
+          gap: 10px;
+          margin-top: 10px;
+        }
+
+        .summary-card {
+          padding: 10px;
+          border-radius: 6px;
+          color: white;
+          font-size: 0.8rem;
+          text-align: center;
+        }
+
+        .summary-card p {
+          font-size: 1rem;
+          font-weight: bold;
+        }
+      </style>
+
+      <div id="trans" class="no metrics-grid">
+        <div id="airtime_bill_payments" class="metric-card">
+          <div class="metric-title">
+            <span></span> Airtime Bill Payments
+          </div>
+          <div class="metric-value">Loading...</div>
+
+        </div>
+
+        <div id="cashpower_bill_payments" class="metric-card">
+          <div class="metric-title">
+            <span></span> Cash Power Bill Payments
+          </div>
+          <div class="metric-value">Loading...</div>
+
+        </div>
+
+        <div id="bundles_purchases" class="metric-card">
+          <div class="metric-title">
+            <span></span> Bundle Purchase
+          </div>
+          <div class="metric-value">Loading...</div>
+
+        </div>
+
+        <div id="incoming_money" class="metric-card">
+          <div class="metric-title">
+            <span></span> Incoming Money
+          </div>
+          <div class="metric-value">Loading...</div>
+
+        </div>
+
+        <div id="payments_to_code_holders" class="metric-card">
+          <div class="metric-title">
+            <span></span> Payments To Code Holders
+          </div>
+          <div class="metric-value">Loading...</div>
+
+        </div>
+
+        <div id="transferts_to_mobile_numbers" class="metric-card">
+          <div class="metric-title">
+            <span></span> Transfers To Mobile Numbers
+          </div>
+          <div class="metric-value">Loading...</div>
+
+        </div>
+
+        <div id="bank_deposits" class="metric-card">
+          <div class="metric-title">
+            <span></span> Bank Deposits
+          </div>
+          <div class="metric-value">Loading...</div>
+
+        </div>
+
+        <div id="transaction_by_third_parties" class="metric-card">
+          <div class="metric-title">
+            <span></span> Transaction By Third Parties
+          </div>
+          <div class="metric-value">Loading...</div>
+
+        </div>
+
+        <div id="withdrawals_from_agents" class="metric-card">
+          <div class="metric-title">
+            <span></span> Withdrawals From Agents
+          </div>
+          <div class="metric-value">Loading...</div>
+
+        </div>
+
+        <div id="bank_transferts" class="metric-card">
+          <div class="metric-title">
+            <span></span> Bank Transfers
+          </div>
+          <div class="metric-value">Loading...</div>
+
+        </div>
+      </div>
+      <script>
+        async function updateMetrics() {
+          const metricIds = [
+            "airtime_bill_payments",
+            "cashpower_bill_payments",
+            "bundles_purchases",
+            "incoming_money",
+            "payments_to_code_holders",
+            "transferts_to_mobile_numbers",
+            "transaction_by_third_parties",
+            "withdrawals_from_agents",
+            "bank_transferts",
+            "bank_deposits",
+          ];
+
+          for (const id of metricIds) {
+            try {
+              const response = await fetch(`http://localhost:3000/${id}`);
+              if (!response.ok) throw new Error(`Failed to fetch ${id}`);
+              const data = await response.json();
+
+              const metricElement = document.querySelector(`#${id} .metric-value`);
+              if (metricElement) {
+                metricElement.textContent = `${Number(data).toLocaleString()} RWF`;
+              }
+            } catch (error) {
+              console.error(`Error updating ${id}:`, error);
+            }
+          }
+        }
+
+        updateMetrics();
+      </script>
+
+  </div>
+  </div>
+  </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+
+</html>`

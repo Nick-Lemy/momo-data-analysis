@@ -50,8 +50,8 @@ export function extractForIncomingMoney(message) {
   const transaction_id = Number(
     words[words.indexOf("Id:") + 1].replace(".", "")
   );
-  const amount = Number(words[3].replace(/,/g, ""));
-  const sender = words[5] + " " + words[6];
+  const amount = Number(words[3].replace(/,/, ""));
+  const sender = words[6] + " " + words[7];
   let date = words[15] + " " + words[16];
   date = date.replace(".", "");
   return {
@@ -64,6 +64,64 @@ export function extractForIncomingMoney(message) {
   };
 }
 
+export function formatCurrentDateTime() {
+  const now = new Date(); // Get current date and time
+
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+  const day = String(now.getDate()).padStart(2, "0");
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const seconds = String(now.getSeconds()).padStart(2, "0");
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
+export function extractForCashPowerBillPayments(message) {
+  /*
+   *162*TxId:14103506143*S*Your payment of 4000 RWF to MTN Cash Power with token 72962-79980-44699-06073 has been completed at 2024-05-26 13:31:00. Fee was 0 RWF. 
+   Your new balance: 800 RWF . Message: - -. *EN#
+   */
+
+  const msg = message.split(" ");
+  const transaction_id = Number(msg[0].split(":")[1].split("*")[0]);
+  const amount = Number(msg[3]);
+  const receiver = "MTN Cash Power";
+  let date = msg[16] + " " + msg[17];
+  date = date.replace(".", "");
+  return {
+    transaction_id,
+    transaction_type: "Cash Power Bill Payments",
+    amount,
+    message,
+    receiver,
+    date,
+  };
+}
+
+export function extractForAirtimeBillPayments(message) {
+  /*
+   *162*TxId:13913173274*S*Your payment of 2000 RWF to Airtime with token
+     has been completed at 2024-05-12 11:41:28. Fee was 0 RWF. Your new balance: 25280 RWF . Message: - -. *EN#
+   */
+  const words = message.split(" ");
+
+  const transaction_id = Number(words[0].split(":")[1].split("*")[0]);
+  const amount = Number(words[3]);
+  const receiver = words[6];
+  let date = words[14] + " " + words[15];
+  date = date.replace(".", "");
+
+  return {
+    transaction_id,
+    transaction_type: "Airtime Bill Payments",
+    amount,
+    message,
+    receiver,
+    date,
+  };
+}
+
 export function extractBundles(message) {
   /*
   
@@ -72,10 +130,12 @@ export function extractBundles(message) {
 
   const msg = message.split(" ");
   const amount = Number(msg.reverse()[1].replace(",", ""));
+  const date = formatCurrentDateTime(Date.now());
   return {
     transaction_type: "Internet and Voice Bundle Purchases",
     amount,
     message,
+    date,
   };
 }
 
@@ -160,12 +220,12 @@ export function extractBankDeposit(message) {
     */
 
   const msg = message.split(" ");
-  const amout = Number(msg[4]);
+  const amount = Number(msg[4]);
   let date = msg[15] + " " + msg[16];
   date = date.replace(".", "");
   return {
     transaction_type: "Bank Deposits",
-    amout,
+    amount,
     message,
     date,
   };
