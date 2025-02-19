@@ -1,5 +1,7 @@
 # Momo Data Analysis
 
+This project process SMS data from MTN MoMo stored in an xml file, clean it, store it in a database, and build a dashboard to visualize it. The task involved working with 1600 SMS messages, which included various transaction types such as payments, withdrawals, and airtime purchases.
+
 ## How to use it ?
 
 ### 1 - Setup the prooject
