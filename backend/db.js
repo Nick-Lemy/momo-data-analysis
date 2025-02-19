@@ -1,13 +1,14 @@
 import { Sequelize, Model, DataTypes } from "sequelize";
-
 import { readFileSync } from "node:fs";
 import { extractAttributes } from "./services/service.js";
+
 // Sequelize instance
 export const sequelize = new Sequelize({
   dialect: "sqlite",
   storage: "./database.sqlite",
 });
 
+// Creating Tables for the database
 export class Transaction extends Model {}
 Transaction.init(
   {
@@ -202,6 +203,8 @@ BankTransfers.init(
     tableName: "bank_transferts",
   }
 );
+
+// Initialize the DB
 await sequelize
   .sync({ force: true }) // WARNING: This will DROP & recreate tables
   .then(() => {
@@ -211,9 +214,7 @@ await sequelize
     console.error("Error syncing database:", error);
   });
 
-// xml file parsed and transformed into string
-
-// Creating
+// Function to send the catogorized and cleaned data to the DB
 async function sendDataToDB() {
   const xmlFile = readFileSync(`${process.cwd()}/modified_sms_v2.xml`, "utf8");
   await extractAttributes(xmlFile).then(async (data) => {
@@ -273,4 +274,5 @@ async function sendDataToDB() {
   });
 }
 
+// Launch processus of data sending
 sendDataToDB();

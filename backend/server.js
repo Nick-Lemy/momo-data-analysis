@@ -19,7 +19,7 @@ const PORT = 3000;
 
 app.use(cors());
 
-// Chart data
+// Endpoint for Transaction counts
 app.get("/api/transaction-counts", async (req, res) => {
   try {
     const data = {
@@ -42,14 +42,15 @@ app.get("/api/transaction-counts", async (req, res) => {
   }
 });
 
+// Endpoint for all transactions
 app.get("/", async (req, res) => {
   try {
     const transactions = await Transaction.findAll();
     res.json(transactions);
-    // transactions.sort((a, b) => a["transaction_id"] - b["transaction_id"])
   } catch {}
 });
 
+// Enpoint for the sum of amounts of the Airtime bill Payments transactions
 app.get("/airtime_bill_payments", async (req, res) => {
   try {
     const airtime_bill_payments = await AirtimeBillPayments.findAll();
@@ -61,6 +62,7 @@ app.get("/airtime_bill_payments", async (req, res) => {
   } catch {}
 });
 
+// Enpoint for the sum of amounts of the Cash Power Bill Payments transactions
 app.get("/cashpower_bill_payments", async (req, res) => {
   try {
     const cashpower_bill_payments = await CashPowerBillPayments.findAll();
@@ -72,6 +74,7 @@ app.get("/cashpower_bill_payments", async (req, res) => {
   } catch {}
 });
 
+// Enpoint for the sum of amounts of the Bundles transactions
 app.get("/bundles_purchases", async (req, res) => {
   try {
     const bundles_purchases = await Bundle.findAll();
@@ -83,6 +86,7 @@ app.get("/bundles_purchases", async (req, res) => {
   } catch {}
 });
 
+// Enpoint for the sum of amounts of the Incoming Money transactions
 app.get("/incoming_money", async (req, res) => {
   try {
     const incoming_money = await IncomingMoney.findAll();
@@ -94,6 +98,7 @@ app.get("/incoming_money", async (req, res) => {
   } catch {}
 });
 
+// Enpoint for the sum of amounts of the Incoming Money transactions
 app.get("/payments_to_code_holders", async (req, res) => {
   try {
     const payments_to_code_holders = await PaymentsToCodeHolders.findAll();
