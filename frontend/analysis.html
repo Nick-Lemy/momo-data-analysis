@@ -51,7 +51,7 @@
         <h1>Dashboard</h1>
       </header>
       <div style="display: flex;">
-        <!-- Add this where you want the chart to appear in your HTML -->
+        <!-- charts container -->
         <div style="width: 67%; margin: 0 auto; padding-top: 50px;">
           <canvas id="myChart"></canvas>
         </div>
@@ -85,7 +85,7 @@
         const fetchAmounts = async (category) => {
           const response = await fetch(`http://localhost:3000/${category}`);
           const data = await response.json();
-          return data; // Assuming the response contains the 'amount' key
+          return data;
         };
 
         // Fetch data for all categories
@@ -95,7 +95,7 @@
           return amounts;
         };
 
-        // Create the chart after fetching data
+        // Chart Creation 
         fetchAllAmounts().then(amounts => {
           const ctx = document.getElementById('myChart').getContext('2d');
           const myChart = new Chart(ctx, {
@@ -149,7 +149,7 @@
             if (!response.ok) throw new Error('Failed to fetch data');
             const data = await response.json();
 
-            // Convert to array & sort
+            // Converts to array & sort
             let sortedData = Object.entries(data)
               .map(([key, value]) => ({
                 label: key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
@@ -157,16 +157,16 @@
               }))
               .sort((a, b) => b.value - a.value);
 
-            // 🎯 **Apply Log Scaling** to prevent massive value gaps
+            // 🎯 Apply Log Scaling to prevent massive value gaps
             const minValue = Math.min(...sortedData.map(d => d.value));
             const maxValue = Math.max(...sortedData.map(d => d.value));
-            const scaleFactor = 300 / Math.log(maxValue + 1); // Scale to fit in 300px
+            const scaleFactor = 300 / Math.log(maxValue + 1);
             sortedData = sortedData.map(d => ({
               ...d,
-              scaledValue: Math.max(10, Math.log(d.value + 1) * scaleFactor) // Ensure small values are visible
+              scaledValue: Math.max(10, Math.log(d.value + 1) * scaleFactor)
             }));
 
-            // Colors (generate dynamic colors)
+            // Colors for the chart
             const colors = sortedData.map((_, i) => `hsl(${i * 25}, 70%, 60%)`);
 
             new Chart(chartCanvas.getContext('2d'), {
